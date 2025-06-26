@@ -20,14 +20,16 @@ class CheckRole
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
         if (!Auth::check()) {
-            return redirect('login');
+            return redirect()->route('login'); // ⬅️ perbaikan di sini
         }
+
         $user = Auth::user();
         foreach ($roles as $role) {
-            if ($user->role == $role) {
+            if ($user->role === $role) {
                 return $next($request);
             }
         }
+
         abort(403, 'Unauthorized action.');
     }
 }

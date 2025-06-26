@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Agenda;
 use App\Models\Absensi;
 use App\Models\Dokumen;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
@@ -22,7 +25,8 @@ class UserController extends Controller
 
     public function absensi()
     {
-        $absensis = Absensi::where('user_id', auth()->id())->get();
+        
+        $absensis = Absensi::where('user_id', Auth::id())->get();
         return view('user.absensi', compact('absensis'));
     }
 

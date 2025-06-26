@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Dokumen;
 use App\Models\Agenda;
+use App\Models\Dokumen;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
 
 class DokumenController extends Controller
@@ -37,7 +39,7 @@ class DokumenController extends Controller
             'deskripsi' => $request->deskripsi,
             'file_path' => $path,
             'tipe_dokumen' => $request->tipe_dokumen,
-            'user_id' => auth()->id(),
+            'user_id' => auth::user()->id,
             'agenda_id' => $request->agenda_id
         ]);
         return redirect()->route('dokumen.index')->with('success', 'Dokumen berhasil diunggah');

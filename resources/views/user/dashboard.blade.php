@@ -1,17 +1,52 @@
 @extends('layouts.app')
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard Anggota') }}
-        </h2>
-    </x-slot>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
-                    Selamat datang, {{ Auth::user()->name }}!
+
+@section('content')
+<div class="container mt-4">
+    <div class="row">
+        <div class="col">
+            <h2 class="mb-4">Dashboard Anggota</h2>
+            <div class="alert alert-success">
+                Selamat datang, <strong>{{ Auth::user()->name }}</strong>!
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Card Absensi -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-calendar-check fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Absensi</h5>
+                    <p class="card-text">Lihat riwayat kehadiran kegiatan Anda.</p>
+                    <a href="{{ route('user.absensi') }}" class="btn btn-outline-primary btn-sm">Lihat Absensi</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Agenda -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-calendar-alt fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Agenda</h5>
+                    <p class="card-text">Lihat daftar kegiatan organisasi yang akan datang.</p>
+                    <a href="{{ route('user.agenda') }}" class="btn btn-outline-success btn-sm">Lihat Agenda</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Dokumen -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-file-alt fa-3x text-warning mb-3"></i>
+                    <h5 class="card-title">Dokumen</h5>
+                    <p class="card-text">Akses dokumen dan laporan kegiatan organisasi.</p>
+                    <a href="{{ route('user.dokumen') }}" class="btn btn-outline-warning btn-sm">Lihat Dokumen</a>
                 </div>
             </div>
         </div>
     </div>
-</x-app-layout>
+</div>
+@endsection

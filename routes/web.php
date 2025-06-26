@@ -1,32 +1,45 @@
 <?php
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\DokumenController;
-use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 
-// Autentikasi
+// Autentikasi Laravel Breeze/Fortify
 require __DIR__.'/auth.php';
 
-// Dashboard berdasarkan role
-Route::middleware(['auth'])->group(function () {
-    // Profile
-    Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+// ✅ Redirect ke dashboard berdasarkan role
+Route::get('/dashboard', function () {
+    $user = Auth::user();
 
-    // Admin
+    if ($user->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    } elseif ($user->role === 'anggota') {
+        return redirect()->route('user.dashboard');
+    }
+
+    abort(403, 'Unauthorized');
+})->middleware(['auth'])->name('dashboard');
+
+// ✅ Group route dengan middleware 'auth' & 'role'
+Route::middleware(['auth'])->group(function () {
+    // ✅ Profile route
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+
+    // ✅ Admin group
     Route::middleware(['role:admin'])->group(function () {
         Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-        // Agenda
         Route::resource('agenda', AgendaController::class)->except(['show']);
         Route::get('agenda/{agenda}', [AgendaController::class, 'show'])->name('agenda.show');
-        // Absensi
         Route::resource('absensi', AbsensiController::class);
-        // Dokumen
         Route::resource('dokumen', DokumenController::class);
     });
 
-    // User (anggota)
+    // ✅ User/anggota group
     Route::middleware(['role:anggota'])->group(function () {
         Route::get('/user/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard');
         Route::get('/user/agenda', [UserController::class, 'agenda'])->name('user.agenda');
@@ -35,7 +48,7 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-// Home
+// ✅ Route awal (root) diarahkan ke form login
 Route::get('/', function () {
-    return view('dashboard');
+    return view('auth.login');
 });
